@@ -1,5 +1,6 @@
 {
   "name": "server",
+ 
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +9,9 @@
   },
   "author": "",
   "license": "ISC",
+   "type": "module",
   "dependencies": {
+    "mysql": "^2.18.1",
     "mysql2": "^3.9.2",
     "nodemon": "^3.1.0",
     "sequelize": "^6.37.1"

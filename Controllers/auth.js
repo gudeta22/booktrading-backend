@@ -4,7 +4,10 @@ import { db } from "../db.js";
 
 //user registration function
 export const userRegister = (req, res) => {
-  const { email, password } = req.body;
+//   const { email, password } = req.body;
+ const email = "gbteshite6195@gmail.com"
+ const password = "1245"
+
 
   if (!email || !password) {
     return res.status(400).send("email, password  are required.");

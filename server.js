@@ -1,31 +1,34 @@
 // Import the Express framework
-const express = require('express');
-const mysql = require("mysql2");
-const config = require("./config")
+import express from 'express'
 
-const connection = mysql.createConnection({
-  host:  config.database.host, // MySQL server hostname
-  user: config.database.username,      // MySQL username
-  password: config.database.password,      // MySQL password (if any)
-  database: config.database.dbName // Name of the database to connect to
-}); 
+import { db } from "./db.js";
+// const config = require("./config");
+import authRouth from './routes/auth.js'
 
-// Create an instance of Express
 const app = express();
-// Connect to the database
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL database:', err);
-    return;
-  }
-  console.log('Connected to MySQL database');
-});
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+// Create an instance of Express
 
+// Connect to the database
+ 
+app.use("/api/auth" , authRouth )
+app.use('/api/auth' , authRouth)
+
+app.use("/", (req, res) => {
+  res.json("hello there");
+});
 
 // Start the server
-app.listen(8800, () => {
- 
+app.listen(8801, () => {
   console.log("Server running on port 8800...");
- 
+  db.connect((error) => {
+    if (error) {
+      console.error("Error connecting to the database:", error);
+      return;
+    }
+    console.log("Connected to the database.");
+  });
 });
+
 
