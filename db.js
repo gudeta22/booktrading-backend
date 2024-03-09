@@ -1,13 +1,12 @@
-import mysql from 'mysql'
 
+import mysql from "mysql";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 export const db = mysql.createConnection({
-  host: "localhost", // Assuming MySQL server is running on localhost
-  user: "root", // Default MySQL username for XAMPP
-  password: "", // Default MySQL password for XAMPP (empty string)
-  database: "bookstore", // Name of the database to connect to
+  user: "root",
+  host: 'localhost',
+  database: 'bookstore',
+  password: ""
 });
-
-// Connect to the database
-
