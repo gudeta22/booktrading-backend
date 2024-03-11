@@ -3,7 +3,8 @@ import { createPost, viewPosts } from "../Controllers/post.js";
 
 const router = express.Router();
 
-router.get("/create" , createPost);
-router.get("/view" , viewPosts);
+router.get("/" , viewPosts);
+router.get("/create" ,  createPost);
+
 
 export default router

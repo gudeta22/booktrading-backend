@@ -42,9 +42,9 @@ export const userLogin = (req, res) => {
   }
 
   // Query the database to check if the user existlocalhost:3005/api/auth/registers with the provided email
-  const sql = `SELECT * FROM userRegisters WHERE email = ?`;
+  const sql = `SELECT * FROM userRegisters WHERE email = ? AND password = ?`;
 
-  db.query(sql, [email], (error, results) => {
+  db.query(sql, [email , password], (error, results) => {
     if (error) {
       console.error("Error executing the query:", error);
       return res.status(500).send("Internal Server Error");
@@ -66,12 +66,11 @@ export const userLogin = (req, res) => {
 
     // Send the token in the response
     res.cookie("token", token, { httpOnly: true });
-    res.status(200).json({
-      message: `Login successful. Redirecting...`,
-      user_id: user.id,
-      email: user.email,
-      password: user.password,
+       res.status(200).json({
+      message: `Login successful.`,
+      redirectUrl: "/", // Change this to the desired redirect URL
     });
+
   });
 };
 export const authLogin = (req, res, next) => {
