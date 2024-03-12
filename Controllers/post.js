@@ -5,26 +5,26 @@ import {db } from '../db.js'
 
 
 export const createPost = async (req, res) => {
-  // const { title, author, price } = req.body;
-  // const image = req.file.filename;
-   const image= "image3"
-    const title = "rich dad poor dad"
-   const author = "BUli teshite"
-   const price = 1000
+  const { title, author, price , image } = req.body;
+  const imageName=req.file.filename;
+  
+   console.log(title , author , price ,imageName)
+   console.log(imageName)
   
 
-  if (!title || !price || !author || !image) {
-    return res.status(400).send("Title, content, author, and image are required");
+  if (!title || !price || !author || !imageName) {
+    return res.status(400).send("inputes are required");
   }
 
   try {
     // Insert the post data into the database
-   const sql = `INSERT INTO posts (image, title, author, price) VALUES (?, ?, ?, ?)`;
+   const sql = `INSERT INTO posts (image , title , author, price) VALUES (?, ?, ?, ?)`;
 
-    db.query(sql, [image, title,author , price], (error, results) => {
+     db.query(sql, [imageName, title,author , price], (error, results) => {
       if (error) {
         console.error("Error executing the query:", error);
-        return res.status(500).send("Internal Server Error");
+       
+         return res.status(201).json({ image, title, author, price });
       }
 
       return res.status(201).json({ image , title , author , price });
@@ -33,8 +33,17 @@ export const createPost = async (req, res) => {
     console.error("Error creating post:", error);
     return res.status(500).send("Internal Server Error");
   }
+
+
 };
 export const viewPosts = (req, res) => {
+const protocol = req.protocol;
+  const hostname = req.hostname;
+  const port = req.get("host").split(":")[1] || "80"; // Extract port from host header or default to 80
+  // Construct the full URL
+  const fullUrl = `${protocol}://${hostname}:${port}/`;
+  // console.log("Full URL:", fullUrl);
+    // const fullUrl = `localhost:4003/`;
   try {
     // Fetch posts from the database
     const sql = `SELECT * FROM posts`;
@@ -43,8 +52,16 @@ export const viewPosts = (req, res) => {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");
       }
-
-      return res.status(200).json(results);
+        const data = results.map((data) => {
+          const singleData = data;
+          singleData.image = fullUrl + "image/"+singleData.image;
+          return singleData;
+        });
+        res.json(data);
+        console.log(results)
+        console.log(data)
+        
+      
     });
   } catch (error) {
     console.error("Error fetching posts:", error);

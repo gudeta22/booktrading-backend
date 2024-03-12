@@ -3,9 +3,7 @@ import {db} from '../db.js'; // Import your database connection
 
 export const userRegister = async (req, res) => {
   const { fullName, email, password } = req.body;
-// const fullName = "GUdte"
-// const email = "gb@gmail.com"
-// const password = "0918996195"
+
   
   try {
 
