@@ -44,10 +44,12 @@ const protocol = req.protocol;
   const fullUrl = `${protocol}://${hostname}:${port}/`;
   // console.log("Full URL:", fullUrl);
     // const fullUrl = `localhost:4003/`;
+   
   try {
+    
     // Fetch posts from the database
-    const sql = `SELECT * FROM posts`;
-    db.query(sql, (error, results) => {
+    const sql = `SELECT * FROM posts ORDER BY timestamp DESC`;
+    db.query(sql , (error, results) => {
       if (error) {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");

@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
   },
 }); // Initialize multer with the storage options
 export const upload = multer({ storage: storage });
-console.log(storage)
+
 
 router.get("/" , viewPosts);
 router.post("/create",upload.single('image'), createPost);
