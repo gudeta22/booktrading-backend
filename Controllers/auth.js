@@ -73,6 +73,20 @@ export const userLogin = (req, res) => {
 
   });
 };
+
+export const userLogout = (req, res) => {
+  // Assuming you're using JWT tokens stored in cookies
+  res.clearCookie("token"); // Clears the token cookie
+
+  // You can also choose to invalidate the token on the server-side
+  // depending on your application's requirements, for example, by adding it to a blacklist
+
+  res.status(200).json({
+    message: "Logout successful.",
+    redirectUrl: "/login", // Redirect to login page after logout
+  });
+};
+
 export const authLogin = (req, res, next) => {
   const token = req.headers.authorization;
 
