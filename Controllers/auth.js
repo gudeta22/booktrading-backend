@@ -8,7 +8,7 @@ dotenv.config();
 export const userRegister = async (req, res) => {
   const { fullName, email, password } = req.body;
 
-  if ( !email || !password) {
+  if (!email || !password) {
     return res.status(400).send("invalid email and password");
   }
 
@@ -35,7 +35,6 @@ export const userRegister = async (req, res) => {
 };
 export const userLogin = (req, res) => {
   const { email, password } = req.body;
- 
 
   if (!email || !password) {
     return res.status(400).send("Email and password are required.");
@@ -44,7 +43,7 @@ export const userLogin = (req, res) => {
   // Query the database to check if the user existlocalhost:3005/api/auth/registers with the provided email
   const sql = `SELECT * FROM userRegisters WHERE email = ? AND password = ?`;
 
-  db.query(sql, [email , password], (error, results) => {
+  db.query(sql, [email, password], (error, results) => {
     if (error) {
       console.error("Error executing the query:", error);
       return res.status(500).send("Internal Server Error");
@@ -54,23 +53,21 @@ export const userLogin = (req, res) => {
     if (results.length === 0) {
       return res.status(401).send("Invalid email or password for this.");
     }
-    
 
     const user = results[0];
     // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email, password: user.password },
       process.env.SECRET_TOKEN,
-      { expiresIn: "1h" }
+      { expiresIn: "3s" }
     );
 
     // Send the token in the response
     res.cookie("token", token, { httpOnly: true });
-       res.status(200).json({
+    res.status(200).json({
       message: `Login successful.`,
       redirectUrl: "/", // Change this to the desired redirect URL
     });
-
   });
 };
 
@@ -105,5 +102,3 @@ export const authLogin = (req, res, next) => {
 export const userAuthorized = (req, res) => {
   return res.status(200).send({ message: "You are authorized!" });
 };
-
-

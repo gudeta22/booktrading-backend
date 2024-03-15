@@ -70,3 +70,54 @@ const protocol = req.protocol;
     return res.status(500).send("Internal Server Error");
   }
 };
+
+//edit Post
+// export const editPost = async (req, res) => {
+//   const { id } = req.params;
+//   const { title, author, price, image } = req.body;
+//   const imageName = req.file.filename;
+
+//   if (!title || !price || !author || !imageName) {
+//     return res.status(400).send("All fields are required");
+//   }
+
+//   try {
+//     // Update the post data in the database
+//     const sql = `UPDATE posts SET image=?, title=?, author=?, price=? WHERE id=?`;
+//     db.query(sql, [imageName, title, author, price, id], (error, results) => {
+//       if (error) {
+//         console.error("Error executing the query:", error);
+//         return res.status(500).send("Internal Server Error");
+//       }
+
+//       return res.status(200).json({ id, image, title, author, price });
+//     });
+//   } catch (error) {
+//     console.error("Error editing post:", error);
+//     return res.status(500).send("Internal Server Error");
+//   }
+// };
+
+//Delete Posts
+export const deletePost = async (req, res) => {
+  const { id } = req.params;
+ 
+
+  try {
+    // Delete the post from the database
+    const sql = `DELETE FROM posts WHERE id=?`;
+    db.query(sql, [id], (error, results) => {
+      if (error) {
+        console.log("deleted")
+        console.error("Error executing the query:", error);
+        return res.status(500).send("Internal Server Error");
+        
+      }
+
+      return res.status(200).json({ message: `Post with ID ${id} deleted successfully` });
+    });
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    return res.status(500).send("Internal Server Error");
+  }
+};

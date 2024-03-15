@@ -8,15 +8,13 @@ import createPost from "./routes/post.js";
 import path from 'path';
 import cors from "cors";
 import userRegister from "./routes/register.js";
-const PORT =  4005;
+const PORT =  4009;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 const currentDir = process.cwd();
 app.use("/image", express.static(path.join(currentDir, "upload")));
 app.use(express.json());
-
-// Define storage for the uploaded files
 
 
 app.use("/api/auth", authRouth);

@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, viewPosts } from "../Controllers/post.js";
+import { createPost, deletePost, viewPosts } from "../Controllers/post.js";
 import multer from "multer";
 
 
@@ -20,6 +20,7 @@ export const upload = multer({ storage: storage });
 
 
 router.get("/" , viewPosts);
+router.delete('/delete/:id' , deletePost)
 router.post("/create",upload.single('image'), createPost);
 
 
