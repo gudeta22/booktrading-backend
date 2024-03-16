@@ -5,34 +5,34 @@ import dotenv from "dotenv";
 
 dotenv.config();
 //user registration function
-export const userRegister = async (req, res) => {
-  const { fullName, email, password } = req.body;
+// export const userRegister = async (req, res) => {
+//   const { fullName, email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).send("invalid email and password");
-  }
+//   if (!email || !password) {
+//     return res.status(400).send("invalid email and password");
+//   }
 
-  try {
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 3); // 10 is the number of salt rounds
+//   try {
+//     // Hash the password
+//     const hashedPassword = await bcrypt.hash(password, 3); // 10 is the number of salt rounds
 
-    // Insert the user data into the database
-    const sql = `INSERT INTO userRegisters (fullName , email, password) VALUES (?, ? , ?)`;
-    db.query(sql, [fullName, email, hashedPassword], (error, results) => {
-      if (error) {
-        console.error("Error executing the query:", error);
-        return res.status(500).send("Internal Server Error");
-      }
+//     // Insert the user data into the database
+//     const sql = `INSERT INTO userRegisters (fullName , email, password) VALUES (?, ? , ?)`;
+//     db.query(sql, [fullName, email, hashedPassword], (error, results) => {
+//       if (error) {
+//         console.error("Error executing the query:", error);
+//         return res.status(500).send("Internal Server Error");
+//       }
 
-      return res
-        .status(200)
-        .json({ fullName: fullName, email: email, password: hashedPassword });
-    });
-  } catch (error) {
-    console.error("Error hashing password:", error);
-    return res.status(500).send("Internal Server Error");
-  }
-};
+//       return res
+//         .status(200)
+//         .json({ fullName: fullName, email: email, password: hashedPassword });
+//     });
+//   } catch (error) {
+//     console.error("Error hashing password:", error);
+//     return res.status(500).send("Internal Server Error");
+//   }
+// };
 export const userLogin = (req, res) => {
   const { email, password } = req.body;
 

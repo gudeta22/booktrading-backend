@@ -8,7 +8,7 @@ import createPost from "./routes/post.js";
 import path from 'path';
 import cors from "cors";
 import userRegister from "./routes/register.js";
-const PORT =  4009;
+const PORT =  4011;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
