@@ -8,7 +8,8 @@ import createPost from "./routes/post.js";
 import path from 'path';
 import cors from "cors";
 import userRegister from "./routes/register.js";
-const PORT =  4011;
+// import { editPost } from "./Controllers/post.js";
+const PORT =  4001;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -19,6 +20,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRouth);
 app.use("/api/posts" , createPost);
+// app.use("/api/posts/update/:id" , editPost)
 app.use("/api", userRegister);
 
 // Start the server
@@ -32,3 +34,6 @@ app.listen(PORT, () => {
     console.log("Connected to the database.");
   });
 });
+
+
+console.log()
