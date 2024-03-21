@@ -6,9 +6,6 @@ export const createPost = async (req, res) => {
   const { title, author, price, image , content } = req.body;
   const imageName = req.file.filename;
 
-  console.log(title, author, price, imageName , content);
-  console.log(imageName);
-
   if (!title || !price || !author || !imageName || !content) {
     return res.status(400).send("inputes are required");
   }
@@ -54,8 +51,8 @@ export const viewPosts = (req, res) => {
         return singleData;
       });
       res.json(data);
-      console.log(results);
-      console.log(data);
+      // console.log(results);
+      // console.log(data);
     });
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -64,48 +61,42 @@ export const viewPosts = (req, res) => {
 };
 
 // edit Post
-// edit Post
 export const editPost = async (req, res) => {
   const { id } = req.params;
-  const { title, author, price } = req.body; // Removed image from here
-   
-  let imageName; // Declare imageName variable
+  const { title, author, price } = req.body;
+  const imageName = req.file.filename;
 
-  if (req.file) {
-    // Check if a new image file is uploaded
-    imageName = req.file.filename;
-  }
+console.log(title , author , price)
 
-  if (!title || !price || !author) {
+  if (!title || !price || !author || !imageName) {
     return res.status(400).send("All fields are required");
   }
 
   try {
-    // Update the post data in the database
-    let sql, values;
-    if (imageName) {
-      // If a new image is uploaded, update image as well
-      sql = `UPDATE posts SET image=?, title=?, author=?, price=? WHERE id=?`;
-      values = [imageName, title, author, price, id];
-    } else {
-      // If no new image is uploaded, update other fields only
-      sql = `UPDATE posts SET title=?, author=?, price=? WHERE id=?`;
-      values = [title, author, price, id];
-    }
-
-    db.query(sql, values, (error, results) => {
+    const sql = `UPDATE posts SET image=?, title=?, author=?, price=? WHERE id=?`;
+    db.query(sql, [imageName, title, author, price, id], (error, results) => {
       if (error) {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");
       }
 
-      return res.status(200).json({ id, title, author, price });
+      const updatedPost = {
+        id,
+        image: imageName,
+        title,
+        author,
+        price,
+      };
+      
+      console.log(updatedPost); // Log the updated post
+      res.status(200).json(updatedPost); // Send the response with updated post
     });
   } catch (error) {
-    console.error("Error editing post:", error);
+    console.error("Error updating post:", error);
     return res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 //Delete Posts
@@ -131,4 +122,5 @@ export const deletePost = async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+
 
