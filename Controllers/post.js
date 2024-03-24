@@ -3,26 +3,27 @@ import { db } from "../db.js";
 // Set up multer storage for image uploads
 
 export const createPost = async (req, res) => {
-  const { title, author, price, image , content } = req.body;
+  const { title, author, price, image, content } = req.body;
   const imageName = req.file.filename;
-
   if (!title || !price || !author || !imageName || !content) {
     return res.status(400).send("inputes are required");
   }
-
   try {
     // Insert the post data into the database
     const sql = `INSERT INTO posts (image , title , author, price , content) VALUES (?, ?, ?, ? , ?)`;
 
-    db.query(sql, [imageName, title, author, price , content], (error, results) => {
-      if (error) {
-        console.error("Error executing the query:", error);
+    db.query(
+      sql,
+      [imageName, title, author, price, content],
+      (error, results) => {
+        if (error) {
+          console.error("Error executing the query:", error);
 
-        return res.status(201).json({ image, title, author, price , content});
+          return res.status(201).json({ image, title, author, price, content });
+        }
+        return res.status(201).json({ image, title, author, price, content });
       }
-
-      return res.status(201).json({ image, title, author, price , content });
-    });
+    );
   } catch (error) {
     console.error("Error creating post:", error);
     return res.status(500).send("Internal Server Error");
@@ -34,8 +35,6 @@ export const viewPosts = (req, res) => {
   const port = req.get("host").split(":")[1] || "80"; // Extract port from host header or default to 80
   // Construct the full URL
   const fullUrl = `${protocol}://${hostname}:${port}/`;
-  // console.log("Full URL:", fullUrl);
-  // const fullUrl = `localhost:4003/`;
 
   try {
     // Fetch posts from the database
@@ -66,8 +65,6 @@ export const editPost = async (req, res) => {
   const { title, author, price } = req.body;
   const imageName = req.file.filename;
 
-console.log(title , author , price)
-
   if (!title || !price || !author || !imageName) {
     return res.status(400).send("All fields are required");
   }
@@ -87,7 +84,7 @@ console.log(title , author , price)
         author,
         price,
       };
-      
+
       console.log(updatedPost); // Log the updated post
       res.status(200).json(updatedPost); // Send the response with updated post
     });
@@ -96,8 +93,6 @@ console.log(title , author , price)
     return res.status(500).send("Internal Server Error");
   }
 };
-
-
 
 //Delete Posts
 export const deletePost = async (req, res) => {
@@ -122,5 +117,3 @@ export const deletePost = async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 };
-
-

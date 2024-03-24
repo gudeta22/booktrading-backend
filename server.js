@@ -1,9 +1,8 @@
 // Import the Express framework
 import express from "express";
-import { db } from "./db.js";
+import {db } from "./db.js";
 import authRouth from "./routes/auth.js";
 import createPost from "./routes/post.js";
-
 // import multer from "multer";
 import path from 'path';
 import cors from "cors";
@@ -20,7 +19,6 @@ app.use(express.json());
 
 app.use("/api/auth", authRouth);
 app.use("/api/posts" , createPost);
-// app.use("/api/posts/update/:id" , editPost)
 app.use("/api", userRegister);
 
 // Start the server
@@ -36,4 +34,4 @@ app.listen(PORT, () => {
 });
 
 
-console.log()
+
