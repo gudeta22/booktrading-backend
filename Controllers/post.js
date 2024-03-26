@@ -1,7 +1,6 @@
 import { db } from "../db.js";
 
 // Set up multer storage for image uploads
-
 export const createPost = async (req, res) => {
   const { title, author, price, image, content } = req.body;
   const imageName = req.file.filename;
@@ -11,7 +10,6 @@ export const createPost = async (req, res) => {
   try {
     // Insert the post data into the database
     const sql = `INSERT INTO posts (image , title , author, price , content) VALUES (?, ?, ?, ? , ?)`;
-
     db.query(
       sql,
       [imageName, title, author, price, content],
@@ -35,7 +33,6 @@ export const viewPosts = (req, res) => {
   const port = req.get("host").split(":")[1] || "80"; // Extract port from host header or default to 80
   // Construct the full URL
   const fullUrl = `${protocol}://${hostname}:${port}/`;
-
   try {
     // Fetch posts from the database
     const sql = `SELECT * FROM posts ORDER BY timestamp DESC`;
@@ -50,50 +47,66 @@ export const viewPosts = (req, res) => {
         return singleData;
       });
       res.json(data);
-      // console.log(results);
-      // console.log(data);
+    
     });
   } catch (error) {
     console.error("Error fetching posts:", error);
     return res.status(500).send("Internal Server Error");
   }
 };
-
 // edit Post
 export const editPost = async (req, res) => {
   const { id } = req.params;
   const { title, author, price } = req.body;
-  const imageName = req.file.filename;
-
-  if (!title || !price || !author || !imageName) {
-    return res.status(400).send("All fields are required");
-  }
+  const imageName = req.file ? req.file.filename : null; // Check if file is provided
 
   try {
-    const sql = `UPDATE posts SET image=?, title=?, author=?, price=? WHERE id=?`;
-    db.query(sql, [imageName, title, author, price, id], (error, results) => {
+    let sql = `UPDATE posts SET`;
+    const values = [];
+    
+    if (imageName) {
+      sql += ` image=?,`;
+      values.push(imageName);
+    }
+    if (title) {
+      sql += ` title=?,`;
+      values.push(title);
+    }
+    if (author) {
+      sql += ` author=?,`;
+      values.push(author);
+    }
+    if (price) {
+      sql += ` price=?,`;
+      values.push(price);
+    }
+
+    // Remove trailing comma and add WHERE clause
+    sql = sql.slice(0, -1) + ` WHERE id=?`;
+    values.push(id);
+
+    db.query(sql, values, (error, results) => {
       if (error) {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");
       }
 
-      const updatedPost = {
+      const updatedFields = {
         id,
-        image: imageName,
-        title,
-        author,
-        price,
+        ...(imageName && { image: imageName }),
+        ...(title && { title }),
+        ...(author && { author }),
+        ...(price && { price }),
       };
 
-      console.log(updatedPost); // Log the updated post
-      res.status(200).json(updatedPost); // Send the response with updated post
+      console.log(updatedFields); // Log the updated fields
+      res.status(200).json(updatedFields); // Send the response with updated fields
     });
   } catch (error) {
     console.error("Error updating post:", error);
     return res.status(500).send("Internal Server Error");
   }
 };
-
 //Delete Posts
 export const deletePost = async (req, res) => {
   const { id } = req.params;
@@ -107,7 +120,6 @@ export const deletePost = async (req, res) => {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");
       }
-
       return res
         .status(200)
         .json({ message: `Post with ID ${id} deleted successfully` });

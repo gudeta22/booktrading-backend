@@ -1,59 +1,26 @@
 import { db } from "../db.js";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
-//user registration function
-// export const userRegister = async (req, res) => {
-//   const { fullName, email, password } = req.body;
-
-//   if (!email || !password) {
-//     return res.status(400).send("invalid email and password");
-//   }
-
-//   try {
-//     // Hash the password
-//     const hashedPassword = await bcrypt.hash(password, 3); // 10 is the number of salt rounds
-
-//     // Insert the user data into the database
-//     const sql = `INSERT INTO userRegisters (fullName , email, password) VALUES (?, ? , ?)`;
-//     db.query(sql, [fullName, email, hashedPassword], (error, results) => {
-//       if (error) {
-//         console.error("Error executing the query:", error);
-//         return res.status(500).send("Internal Server Error");
-//       }
-
-//       return res
-//         .status(200)
-//         .json({ fullName: fullName, email: email, password: hashedPassword });
-//     });
-//   } catch (error) {
-//     console.error("Error hashing password:", error);
-//     return res.status(500).send("Internal Server Error");
-//   }
-// };
 export const userLogin = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).send("Email and password are required.");
   }
-
   // Query the database to check if the user existlocalhost:3005/api/auth/registers with the provided email
   const sql = `SELECT * FROM userRegisters WHERE email = ? AND password = ?`;
-
   db.query(sql, [email, password], (error, results) => {
     if (error) {
       console.error("Error executing the query:", error);
       return res.status(500).send("Internal Server Error");
     }
-
     // Check if any user matched the provided email
     if (results.length === 0) {
       return res.status(401).send("Invalid email or password for this.");
     }
-
     const user = results[0];
     // Generate JWT token
     const token = jwt.sign(
@@ -61,7 +28,6 @@ export const userLogin = (req, res) => {
       process.env.SECRET_TOKEN,
       { expiresIn: "3s" }
     );
-
     // Send the token in the response
     res.cookie("token", token, { httpOnly: true });
     res.status(200).json({
@@ -70,20 +36,16 @@ export const userLogin = (req, res) => {
     });
   });
 };
-
 export const userLogout = (req, res) => {
   // Assuming you're using JWT tokens stored in cookies
   res.clearCookie("token"); // Clears the token cookie
-
   // You can also choose to invalidate the token on the server-side
   // depending on your application's requirements, for example, by adding it to a blacklist
-
   res.status(200).json({
     message: "Logout successful.",
     redirectUrl: "/login", // Redirect to login page after logout
   });
 };
-
 export const authLogin = (req, res, next) => {
   const token = req.headers.authorization;
 
