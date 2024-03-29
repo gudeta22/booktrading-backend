@@ -10,29 +10,34 @@ export const userLogin = (req, res) => {
   if (!email || !password) {
     return res.status(400).send("Email and password are required.");
   }
-  // Query the database to check if the user existlocalhost:3005/api/auth/registers with the provided email
+
+  // Query the database to check if the user exists with the provided email
   const sql = `SELECT * FROM userRegisters WHERE email = ? AND password = ?`;
   db.query(sql, [email, password], (error, results) => {
     if (error) {
       console.error("Error executing the query:", error);
       return res.status(500).send("Internal Server Error");
     }
+
     // Check if any user matched the provided email
     if (results.length === 0) {
-      return res.status(401).send("Invalid email or password for this.");
+      return res.status(401).send("Invalid email or password.");
     }
+
     const user = results[0];
+    
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, email: user.email, password: user.password },
+      { userId: user.id, email: user.email },
       process.env.SECRET_TOKEN,
-      { expiresIn: "3s" }
+      { expiresIn: "1h" }
     );
+
     // Send the token in the response
     res.cookie("token", token, { httpOnly: true });
     res.status(200).json({
       message: `Login successful.`,
-      redirectUrl: "/", // Change this to the desired redirect URL
+      redirectUrl: "/dashboard", // Change this to the desired redirect URL
     });
   });
 };
