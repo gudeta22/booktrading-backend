@@ -16,7 +16,6 @@ export const createPost = async (req, res) => {
       (error, results) => {
         if (error) {
           console.error("Error executing the query:", error);
-
           return res.status(201).json({ image, title, author, price, content });
         }
         return res.status(201).json({ image, title, author, price, content });
@@ -47,7 +46,6 @@ export const viewPosts = (req, res) => {
         return singleData;
       });
       res.json(data);
-    
     });
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -63,7 +61,7 @@ export const editPost = async (req, res) => {
   try {
     let sql = `UPDATE posts SET`;
     const values = [];
-    
+
     if (imageName) {
       sql += ` image=?,`;
       values.push(imageName);
@@ -80,17 +78,14 @@ export const editPost = async (req, res) => {
       sql += ` price=?,`;
       values.push(price);
     }
-
     // Remove trailing comma and add WHERE clause
     sql = sql.slice(0, -1) + ` WHERE id=?`;
     values.push(id);
-
     db.query(sql, values, (error, results) => {
       if (error) {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");
       }
-
       const updatedFields = {
         id,
         ...(imageName && { image: imageName }),
