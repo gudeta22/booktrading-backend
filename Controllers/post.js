@@ -26,6 +26,7 @@ export const createPost = async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+
 export const viewPosts = (req, res) => {
   const protocol = req.protocol;
   const hostname = req.hostname;
@@ -52,6 +53,35 @@ export const viewPosts = (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+
+
+export const usersPost = (req , res) =>{
+  const protocol = req.protocol;
+  const hostname = req.hostname;
+  const port = req.get("host").split(":")[1] || "80"; // Extract port from host header or default to 80
+  // Construct the full URL
+  const fullUrl = `${protocol}://${hostname}:${port}/`;
+  try {
+    // Fetch posts from the database
+    const sql = `SELECT * FROM posts ORDER BY timestamp DESC`;
+    db.query(sql, (error, results) => {
+      if (error) {
+        console.error("Error executing the query:", error);
+        return res.status(500).send("Internal Server Error");
+      }
+      const data = results.map((data) => {
+        const singleData = data;
+        singleData.image = fullUrl + "image/" + singleData.image;
+        return singleData;
+      });
+      res.json(data);
+    });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return res.status(500).send("Internal Server Error");
+  }
+}
+
 // edit Post
 export const editPost = async (req, res) => {
   const { id } = req.params;
@@ -105,7 +135,6 @@ export const editPost = async (req, res) => {
 //Delete Posts
 export const deletePost = async (req, res) => {
   const { id } = req.params;
-
   try {
     // Delete the post from the database
     const sql = `DELETE FROM posts WHERE id=?`;
@@ -115,9 +144,11 @@ export const deletePost = async (req, res) => {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");
       }
+
       return res
         .status(200)
         .json({ message: `Post with ID ${id} deleted successfully` });
+
     });
   } catch (error) {
     console.error("Error deleting post:", error);

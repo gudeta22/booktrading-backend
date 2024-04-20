@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, deletePost,editPost, viewPosts } from "../Controllers/post.js";
+import { createPost, usersPost ,  deletePost,editPost, viewPosts } from "../Controllers/post.js";
 import multer from "multer";
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -18,9 +18,10 @@ export const upload = multer({ storage: storage });
 
 
 router.get("/" , viewPosts);
+router.get("/usersPost" , usersPost);
 router.delete('/delete/:id' , deletePost)
 router.put('/update/:id' ,upload.single('image') ,   editPost)
 router.post("/create",upload.single('image'), createPost);
 
 
-export default router
+export default router;
