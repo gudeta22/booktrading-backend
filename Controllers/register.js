@@ -13,11 +13,11 @@ export const userRegister = async (req, res) => {
       return res.status(400).send("Email is already registered.");
     }
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+    // const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
     // Insert the hashed password into the database
     const sql = `INSERT INTO userRegisters (fullName, email, password) VALUES (?, ?, ?)`;
 
-    db.query(sql, [fullName, email, hashedPassword], (error, results) => {
+    db.query(sql, [fullName, email, password], (error, results) => {
       if (error) {
         console.error("Error executing the query:", error);
         return res.status(500).send("Internal Server Error");
@@ -29,7 +29,7 @@ export const userRegister = async (req, res) => {
         { expiresIn: "1s" }
       );
 
-      return res.status(200).json({ fullName, email, token });
+      return res.status(200).json({ fullName, email, token ,  password });
     });
   } catch (error) {
     console.error("Error hashing password:", error);
