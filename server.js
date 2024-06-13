@@ -5,7 +5,7 @@ import createPost from "./routes/post.js";
 import path from "path";
 import cors from "cors";
 import userRegister from "./routes/register.js";
-const PORT = 4000;
+const PORT = 4001;
 const app = express();
 
 // Middleware
