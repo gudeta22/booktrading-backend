@@ -24,6 +24,7 @@ export const authenticateUser = (req, res, next) => {
   }
 };
 
+
 export const userLogin = async (req, res) => {
   const { email, password } = req.body;
 
