@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, usersPost ,  deletePost,editPost, viewPosts } from "../Controllers/post.js";
+import { createPost ,  deletePost,editPost, viewPosts } from "../Controllers/post.js";
 import multer from "multer";
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -18,10 +18,14 @@ export const upload = multer({ storage: storage });
 
 
 router.get("/" , viewPosts);
-router.get("/usersPost" , usersPost);
+// router.get("/usersPost" , usersPost);
 router.delete('/delete/:id' , deletePost)
-router.put('/update/:id' ,upload.single('image') ,   editPost)
-router.post("/create",upload.single('image'), createPost);
+// router.put('/update/:id' ,upload.single('image') ,   editPost)
+// router.post("/create",upload.single('image'), createPost);
+// Adjust the routes to handle both image and PDF files
+router.put('/update/:id', upload.fields([{ name: 'image', maxCount: 1 }, { name: 'pdf', maxCount: 1 }]), editPost);
+router.post('/create', upload.fields([{ name: 'image', maxCount: 1 }, { name: 'pdf', maxCount: 1 }]), createPost);
+
 
 
 export default router;

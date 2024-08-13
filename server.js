@@ -5,7 +5,7 @@ import createPost from "./routes/post.js";
 import path from "path";
 import cors from "cors";
 import userRegister from "./routes/register.js";
-const PORT = 4001;
+const PORT = 4000;
 const app = express();
 
 // Middleware
@@ -16,6 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from the 'upload' directory under '/image' path
 const currentDir = process.cwd();
 app.use("/image", express.static(path.join(currentDir, "upload")));
+
+app.use('/pdf', express.static(path.join(currentDir, 'upload')));
 
 // Routes
 app.use("/api/auth", authRoute);

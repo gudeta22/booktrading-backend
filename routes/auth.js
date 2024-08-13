@@ -1,12 +1,16 @@
 import express from "express";
-import { userLogin, userLogout } from "../Controllers/auth.js";
-
+import { authenticateUser, userLogin, userLogout } from "../Controllers/auth.js";
 
 const router = express.Router();
 
-router.post('/login' ,  userLogin  );
-router.post("/logout" , userLogout);
-// router.get('/authlogin' , authLogin, userAuthorized )
-// router.post("/checklogin" , authenticateUser);
+// Existing routes
+router.post('/login', userLogin, authenticateUser );
+router.post("/logout", userLogout);
+
+// New route to get user info
+// router.get("/user/info", authenticateUser, ); // Ensure the user is authenticated
 
 export default router;
+
+
+
