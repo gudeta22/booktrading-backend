@@ -7,7 +7,7 @@ export const createPost = async (req, res) => {
   const imageName = req.files['image'] ? req.files['image'][0].filename : null;
     const pdf = req.files['pdf'] ? req.files['pdf'][0].filename : null;
 
-  if (!title || !price || !author || !content || (!imageName && !pdfName)) {
+  if (!title || !price || !author || !content || (!imageName && !pdf)) {
     return res.status(400).send("All inputs are required, including at least one file (image or PDF).");
   }
 
@@ -80,7 +80,7 @@ export const editPost = async (req, res) => {
     }
     if (pdf) {
       sql += ` pdf=?,`;
-      values.push(pdfName);
+      values.push(pdf);
     }
     if (title) {
       sql += ` title=?,`;
@@ -106,7 +106,7 @@ export const editPost = async (req, res) => {
       const updatedFields = {
         id,
         ...(imageName && { image: imageName }),
-        ...(pdfName && { pdf: pdfName }),
+        ...(pdf && { pdf: pdf }),
         ...(title && { title }),
         ...(author && { author }),
         ...(price && { price }),
